@@ -1,24 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect} from 'react';
+import Main from "../Main/Main";
+import {useDispatch} from 'react-redux';
+import {getCurrencyExchange} from "../../redux/actions";
+
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    fetch('https://api.kuna.io/v3/exchange-rates')
+      .then(response => response.json())
+      .then(data => data.filter(key =>
+        key.currency === "btc"||
+        key.currency === "eth"||
+        key.currency ==="xrp" ))
+      .then(text =>  dispatch(getCurrencyExchange(text)))
+    },[dispatch]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Main />
     </div>
   );
 }
